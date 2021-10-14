@@ -82,7 +82,7 @@ abstract class _BaseState<
       required int timeInSecForIos,
       required Color textColor,
       required double fontSize}) {
-    widget?.toastMessage(message,
+    widget.toastMessage(message,
         toastLength: toastLength,
         gravity: gravity,
         timeInSecForIos: timeInSecForIos,
@@ -244,7 +244,7 @@ abstract class BaseStatefulScreen<
 
   @override
   void dispose() {
-    getViewModel()?.dispose();
+    getViewModel().dispose();
     super.dispose();
   }
 }

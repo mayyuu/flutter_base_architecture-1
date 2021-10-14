@@ -32,9 +32,9 @@ abstract class RESTResponse<T> {
 
   RESTResponse(this.response) {
     try {
-      if (this.response?.data != null) {
+      if (this.response.data != null) {
         AppLogger.log(this.response.data.toString());
-        _apiIdenfier = response?.extra["apicallidentifier"];
+        _apiIdenfier = response.extra["apicallidentifier"];
         AppLogger.log("_apiIdenfier" + _apiIdenfier.toString());
         AppLogger.log("cached: " + response.extra["cached"].toString());
         AppLogger.log(
