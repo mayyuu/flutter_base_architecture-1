@@ -5,9 +5,9 @@ class SessionManager {
 
   SessionManager._(this.prefs);
 
-  static SessionManager _instance;
+  static SessionManager? _instance;
 
-  static Future<SessionManager> getInstance() async {
+  static Future<SessionManager?> getInstance() async {
     if (_instance == null) {
       _instance = SessionManager._(await SharedPreferences.getInstance());
     }
@@ -91,24 +91,27 @@ class SessionManager {
   /// Removes an entry from persistent storage.
   Future<bool> remove(String key) => _setValue('remove', key, null);
 
-  Future<bool> _setValue(String valueType, String key, Object value) async {
+  Future<bool> _setValue(String valueType, String key, Object? value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    if (value == null) {
+      return false;
+    }
     switch (valueType) {
       case 'Bool':
-        return prefs.setBool(key, value);
+        return prefs.setBool(key, value as bool);
 
       case 'Int':
-        return prefs.setInt(key, value);
+        return prefs.setInt(key, value as int);
 
       case 'Double':
-        return prefs.setDouble(key, value);
+        return prefs.setDouble(key, value as double);
 
       case 'String':
-        return prefs.setString(key, value);
+        return prefs.setString(key, value as String);
 
       case 'StringList':
-        return prefs.setStringList(key, value);
+        return prefs.setStringList(key, value as List<String>);
 
       case 'remove':
         return prefs.remove(key);

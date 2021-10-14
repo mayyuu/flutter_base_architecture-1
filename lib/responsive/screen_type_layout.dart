@@ -16,13 +16,13 @@ class ScreenTypeLayout extends StatelessWidget {
 
   final ScreenBreakpoints breakpoints;
 
-  final WidgetBuilder watch;
-  final WidgetBuilder mobile;
-  final WidgetBuilder tablet;
-  final WidgetBuilder desktop;
+  final WidgetBuilder? watch;
+  final WidgetBuilder? mobile;
+  final WidgetBuilder? tablet;
+  final WidgetBuilder? desktop;
 
   ScreenTypeLayout(
-      {Key key, this.breakpoints, Widget watch, Widget mobile, Widget tablet, Widget desktop}) :
+      {Key? key,required this.breakpoints,required Widget watch,required Widget mobile,required Widget tablet,required Widget desktop}) :
         this.watch = _builderOrNull(watch),
         this.mobile = _builderOrNull(mobile),
         this.tablet = _builderOrNull(tablet),
@@ -30,10 +30,10 @@ class ScreenTypeLayout extends StatelessWidget {
         super(key: key);
 
   const ScreenTypeLayout.builder(
-      {Key key, this.breakpoints, this.watch, this.mobile, this.tablet, this.desktop})
+      {Key? key,required this.breakpoints,required this.watch,required this.mobile,required this.tablet,required this.desktop})
       : super(key: key);
 
-  static WidgetBuilder _builderOrNull(Widget widget) {
+  static WidgetBuilder? _builderOrNull(Widget widget) {
     return widget == null ? null : ((_) => widget);
   }
 
@@ -45,22 +45,22 @@ class ScreenTypeLayout extends StatelessWidget {
         // If we're at desktop size
         if (sizingInformation.deviceScreenType == DeviceScreenType.Desktop) {
           // If we have supplied the desktop layout then display that
-          if (desktop != null) return desktop(context);
+          if (desktop != null) return desktop!(context);
           // If no desktop layout is supplied we want to check if we have the size below it and display that
-          if (tablet != null) return tablet(context);
+          if (tablet != null) return tablet!(context);
         }
 
         if (sizingInformation.deviceScreenType == DeviceScreenType.Tablet) {
-          if (tablet != null) return tablet(context);
+          if (tablet != null) return tablet!(context);
         }
 
         if (sizingInformation.deviceScreenType == DeviceScreenType.Watch &&
             watch != null) {
-          return watch(context);
+          return watch!(context);
         }
 
         // If none of the layouts above are supplied or we're on the mobile layout then we show the mobile layout
-        return mobile(context);
+        return mobile!(context);
       },
     );
   }

@@ -6,7 +6,7 @@ abstract class RESTRequest {
   final RESTService _service;
 
   String apiUrl;
-  String _apiKey;
+  String _apiKey="";
   String schema;
   String host;
 
@@ -15,7 +15,7 @@ abstract class RESTRequest {
     this._apiKey = "";
   }
 
-  Future<Response> execute(String endpoint, Map<String, dynamic> params,
+  Future<Response?>? execute(String endpoint, Map<String, dynamic> params,
       int apiCallMethod, int apiIdentifier,
       {forceRefresh: false}) async {
     return await _executeRESTCall(
@@ -23,7 +23,7 @@ abstract class RESTRequest {
         forceRefresh: forceRefresh);
   }
 
-  Future<Response> _executeRESTCall(String endpoint, int resourceId,
+  Future<Response?>? _executeRESTCall(String endpoint, int resourceId,
       Map<String, dynamic> params, int apiCallMethod, int apiIdentifier,
       {bool forceRefresh: false}) async {
     var buffer = new StringBuffer();

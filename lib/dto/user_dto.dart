@@ -1,10 +1,10 @@
 import 'package:flutter_base_architecture/dto/base_dto.dart';
 
 class UserDto extends BaseDto {
-  String name;
-  num _id;
+  String name="";
+  num _id=-1;
 
-  UserDto(this._id, {this.name});
+  UserDto(this._id, {required this.name});
 
   UserDto.map(dynamic obj) {
     this.name = obj["name"];

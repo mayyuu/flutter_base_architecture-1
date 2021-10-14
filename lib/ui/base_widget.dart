@@ -2,19 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
-  final Widget Function(BuildContext context, T model, Widget child) builder;
+  final Widget Function(BuildContext context, T model, Widget child)? builder;
   final T viewModel;
-  final Widget child;
-  final Function(T) onModelReady;
+  final Widget? child;
+  final Function(T)? onModelReady;
   Duration duration;
   final bool animate;
 
   BaseWidget(
-      {Key key,
-      @required this.builder,
-      @required this.viewModel,
-      this.child,
-      this.onModelReady,
+      {Key? key,
+      this.builder,
+      required this.viewModel,
+      this.child, this.onModelReady,
       this.duration: const Duration(
         milliseconds: 600,
       ),
@@ -27,9 +26,9 @@ class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
 
 class _BaseWidget<T extends ChangeNotifier> extends State<BaseWidget<T>>
     with SingleTickerProviderStateMixin {
-  T _model;
-  Duration duration;
-  AnimationController _controller;
+  T? _model;
+  Duration? duration;
+  AnimationController? _controller;
 
   @override
   void initState() {
@@ -37,37 +36,41 @@ class _BaseWidget<T extends ChangeNotifier> extends State<BaseWidget<T>>
     _controller = AnimationController(
         vsync: this,
         duration: widget.animate ? widget.duration : Duration(milliseconds: 0));
-    _controller.forward(from: 0.0);
+    _controller?.forward(from: 0.0);
     _model = widget.viewModel;
     duration = widget.duration;
 
-    if (widget.onModelReady != null) {
-      widget.onModelReady(_model);
+    if (_model != null) {
+      if(widget.onModelReady!=null){
+        widget.onModelReady!(_model!);
+      }
     }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<T>.value(
-      value: _model,
+      value: _model!,
       child: Consumer<T>(
         builder: (context, model, child) {
-          _controller.forward(from: 0.0);
+          _controller?.forward(from: 0.0);
           return AnimatedBuilder(
               builder: (context, child) {
                 return Opacity(
-                  opacity: _controller.value,
+                  opacity: _controller?.value ?? 0,
                   child: child,
                 );
               },
-              animation: _controller,
-              child: widget.builder(context, model, child));
+              animation: _controller!,
+              child: widget.builder == null
+                  ? Container()
+                  : widget.builder!(context, model, child!));
         },
         child: widget.child,
       ),

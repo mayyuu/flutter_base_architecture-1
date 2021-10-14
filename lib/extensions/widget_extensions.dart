@@ -3,13 +3,15 @@ import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 extension BaseWidgetExtension on Widget {
-  void toastMessage(String message,
-      {Toast toastLength,
-      ToastGravity gravity,
-      Color backgroundColor,
-      int timeInSecForIos,
-      Color textColor,
-      double fontSize}) {
+  void toastMessage(
+    String message, {
+    required Toast toastLength,
+    required ToastGravity gravity,
+    required Color backgroundColor,
+    required int timeInSecForIos,
+    required Color textColor,
+    required double fontSize,
+  }) {
     Fluttertoast.showToast(
         msg: message,
         toastLength: toastLength,

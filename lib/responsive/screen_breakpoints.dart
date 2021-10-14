@@ -9,7 +9,7 @@ class ScreenBreakpoints {
   final double desktop;
 
   ScreenBreakpoints(
-      {@required this.desktop, @required this.tablet, @required this.watch});
+      {required this.desktop, required this.tablet,required this.watch});
 
   @override
   String toString() {

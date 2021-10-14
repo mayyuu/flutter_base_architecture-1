@@ -7,7 +7,7 @@ class NetworkSensitiveWidget extends StatelessWidget {
   final double opacity;
 
   NetworkSensitiveWidget({
-    this.child,
+    required this.child,
     this.opacity = 0.5,
   });
 

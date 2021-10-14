@@ -6,23 +6,24 @@ import 'package:flutter_base_architecture/extensions/widget_extensions.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 
-abstract class BaseModelWidget<T,ErrorParser extends BaseErrorParser> extends Widget {
-
-  ErrorHandler<ErrorParser> _errorHandler;
+abstract class BaseModelWidget<T, ErrorParser extends BaseErrorParser>
+    extends Widget {
+  ErrorHandler<ErrorParser>? _errorHandler;
 
   @protected
   Widget build(BuildContext context, T model);
 
   @override
-  DataProviderElement<T,ErrorParser> createElement() => DataProviderElement<T,ErrorParser>(this);
+  DataProviderElement<T, ErrorParser> createElement() =>
+      DataProviderElement<T, ErrorParser>(this);
 
   void showToastMessage(String message,
-      {Toast toastLength,
-      ToastGravity gravity,
-      Color backgroundColor,
-      int timeInSecForIos,
-      Color textColor,
-      double fontSize}) {
+      {required Toast toastLength,
+      required ToastGravity gravity,
+      required Color backgroundColor,
+      required int timeInSecForIos,
+      required Color textColor,
+      required double fontSize}) {
     toastMessage(message,
         toastLength: toastLength,
         gravity: gravity,
@@ -33,15 +34,16 @@ abstract class BaseModelWidget<T,ErrorParser extends BaseErrorParser> extends Wi
   }
 
   String getErrorMessage(BuildContext context, BaseError error) {
-    return _errorHandler.parseErrorType(context, error);
+    return _errorHandler?.parseErrorType(context, error) ?? '';
   }
 }
 
-class DataProviderElement<T,ErrorParser extends BaseErrorParser> extends ComponentElement {
+class DataProviderElement<T, ErrorParser extends BaseErrorParser>
+    extends ComponentElement {
   DataProviderElement(BaseModelWidget widget) : super(widget);
 
   @override
-  BaseModelWidget get widget => super.widget;
+  BaseModelWidget get widget => super.widget as BaseModelWidget;
 
   @override
   Widget build() {

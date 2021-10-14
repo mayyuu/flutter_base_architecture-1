@@ -4,10 +4,10 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 
 abstract class UIManager {
-  Size _currentModel;
+  Size? _currentModel;
   double _widthScale = 1;
   double _heightScale = 1;
-  Orientation _orientation;
+  Orientation? _orientation;
 
   UIManager(BuildContext _context) {
     _currentModel = MediaQuery.of(_context).size;
@@ -26,9 +26,9 @@ abstract class UIManager {
     return size * widthScale;
   }
 
-  double get heightScale => _currentModel.height / referenceModel().height;
+  double get heightScale => _currentModel?.height??0 / referenceModel().height;
 
-  double get widthScale => _currentModel.width / referenceModel().width;
+  double get widthScale => _currentModel?.width??0 / referenceModel().width;
 
   double get scale => min(widthScale, heightScale);
 

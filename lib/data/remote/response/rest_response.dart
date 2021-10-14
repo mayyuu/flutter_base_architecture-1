@@ -17,8 +17,8 @@ abstract class RESTResponse<T> {
 
   bool get isSuccess => _status;
 
-  List<BaseError> _errors = List<BaseError>();
-  List<T> _data = new List<T>();
+  List<BaseError> _errors = List<BaseError>.empty();
+  List<T> _data = new List<T>.empty();
   HashMap<String, dynamic> _dataFields = HashMap<String, dynamic>();
   int _apiIdenfier = -1;
 
@@ -35,9 +35,10 @@ abstract class RESTResponse<T> {
       if (this.response?.data != null) {
         AppLogger.log(this.response.data.toString());
         _apiIdenfier = response?.extra["apicallidentifier"];
-        AppLogger.log("_apiIdenfier" + _apiIdenfier?.toString());
-        AppLogger.log("cached: " + response?.extra["cached"]?.toString());
-        AppLogger.log("RESTResponse:: Encrypted " + this.response.data.toString());
+        AppLogger.log("_apiIdenfier" + _apiIdenfier.toString());
+        AppLogger.log("cached: " + response.extra["cached"].toString());
+        AppLogger.log(
+            "RESTResponse:: Encrypted " + this.response.data.toString());
         parseEncryptedResponse(this.response.data);
       } else if (this.response.extra.containsKey("exception")) {
         AppLogger.log("Exception");
@@ -54,7 +55,7 @@ abstract class RESTResponse<T> {
   }
 
   int getStatus() {
-    return response.statusCode;
+    return response.statusCode ?? -1;
   }
 
   List<BaseError> getErrors() {
@@ -78,7 +79,7 @@ abstract class RESTResponse<T> {
   }
 
   String getErrorString() {
-    return _errors?.first?.toString();
+    return _errors.first.toString();
   }
 
   parseResponse(Map<String, dynamic> response) {
@@ -86,7 +87,7 @@ abstract class RESTResponse<T> {
     AppLogger.log("RESTResponse:: Decrypted: " + response.toString());
     try {
       ResponseDto _responseDto =
-          ResponseDto.map(responseObject, this.response.statusCode);
+          ResponseDto.map(responseObject, this.response.statusCode ?? -1);
 
       _status = _responseDto.status.toLowerCase() == API_STATUS_SUCCESS
           ? true
@@ -96,15 +97,17 @@ abstract class RESTResponse<T> {
 
       if (_responseDto.code != 200) {
         getErrors().add(BaseError(
-            message: _responseDto.errors?.first.toString(),
+            message: _responseDto.errors.first.toString(),
             type: BaseErrorType.SERVER_MESSAGE));
         return;
       }
       AppLogger.log("RESTResponse: " + _responseDto.data.toString());
       parseResponseData(_responseDto.data, this._apiIdenfier);
     } catch (error) {
-      getErrors().add(error);
-      AppLogger.log("RESTResponse:: Error" + error.toString());
+      if (error is BaseError) {
+        getErrors().add(error);
+        AppLogger.log("RESTResponse:: Error" + error.toString());
+      }
     }
   }
 

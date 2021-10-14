@@ -10,7 +10,6 @@ abstract class BaseViewModel extends ChangeNotifier {
   PublishSubject<BaseError> _errorMessage = PublishSubject<BaseError>();
 
   bool get busy => _busy;
-  Function(String message) onError;
 
   BaseViewModel({busy = false}) {
     setBusy(busy);

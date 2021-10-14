@@ -15,8 +15,9 @@ import 'base_error_widget.dart';
 import 'base_widget.dart';
 
 /// Every StatefulWidget should be inherited from this
-abstract class BaseStatefulWidget<VM extends BaseViewModel> extends StatefulWidget {
-  BaseStatefulWidget({Key key}) : super(key: key);
+abstract class BaseStatefulWidget<VM extends BaseViewModel>
+    extends StatefulWidget {
+  BaseStatefulWidget({Key? key}) : super(key: key);
 }
 
 abstract class _BaseState<
@@ -25,8 +26,8 @@ abstract class _BaseState<
     ErrorParser extends BaseErrorParser,
     User extends BaseDto> extends State<T> {
   bool _requiresLogin = true;
-  UserStore<User> _userStore;
-  ErrorHandler<ErrorParser> _errorHandler;
+  UserStore<User>? _userStore;
+  ErrorHandler<ErrorParser>? _errorHandler;
 
   @override
   void initState() {
@@ -58,30 +59,29 @@ abstract class _BaseState<
   }
 
   Future<bool> setUser(User user) async {
-    return await _userStore.setUser(user);
+    return await _userStore?.setUser(user)??false;
   }
 
   @protected
   Future<bool> userIsLoggedIn() async {
-    return await _userStore.userIsLoggedIn();
+    return await _userStore?.userIsLoggedIn()??false;
   }
 
-  Future<User> getLoggedInUser() async {
-    return await _userStore.getLoggedInUserJson();
+  Future<User?> getLoggedInUser() async {
+    return await _userStore?.getLoggedInUserJson();
   }
-
 
   Future<bool> removeLoggedInUser() async {
-    return await _userStore.removeUser();
+    return await _userStore?.removeUser()??false;
   }
 
   void showToastMessage(String message,
-      {Toast toastLength,
-      ToastGravity gravity,
-      Color backgroundColor,
-      int timeInSecForIos,
-      Color textColor,
-      double fontSize}) {
+      {required Toast toastLength,
+      required ToastGravity gravity,
+      required Color backgroundColor,
+      required int timeInSecForIos,
+      required Color textColor,
+      required double fontSize}) {
     widget?.toastMessage(message,
         toastLength: toastLength,
         gravity: gravity,
@@ -92,7 +92,7 @@ abstract class _BaseState<
   }
 
   String getErrorMessage(BaseError errorType) {
-    return _errorHandler.parseErrorType(context, errorType);
+    return _errorHandler?.parseErrorType(context, errorType)??'';
   }
 }
 
@@ -100,10 +100,10 @@ abstract class BaseStatefulScreen<
     VM extends BaseViewModel,
     B extends BaseStatefulWidget<VM>,
     ErrorParser extends BaseErrorParser,
-    User extends BaseDto> extends _BaseState<VM,B, ErrorParser, User> {
+    User extends BaseDto> extends _BaseState<VM, B, ErrorParser, User> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
-  VM viewModel;
+  VM? viewModel;
 
   BaseStatefulScreen();
 
@@ -136,7 +136,7 @@ abstract class BaseStatefulScreen<
   }
 
   VM getViewModel() {
-    return viewModel;
+    return viewModel!;
   }
 
   Widget getLayout() {
@@ -150,9 +150,8 @@ abstract class BaseStatefulScreen<
             return Scaffold(
                 backgroundColor: scaffoldColor(),
                 key: scaffoldKey,
-                appBar: buildAppbar(),
+                appBar: buildAppbar() as PreferredSizeWidget,
                 body: buildBody(),
-                resizeToAvoidBottomPadding: resizeToAvoidBottomPadding(),
                 bottomNavigationBar: buildBottomNavigationBar(),
                 floatingActionButton: floatingActionButton(),
                 floatingActionButtonLocation: floatingActionButtonLocation(),
@@ -174,18 +173,18 @@ abstract class BaseStatefulScreen<
     return BaseErrorScreen(errorLogo(), widgetErrorMessage());
   }
 
-  Widget buildAppbar() {
+  Widget? buildAppbar() {
     return null;
   }
 
   /// Should be overridden in extended widget
   Widget buildBody();
 
-  Widget buildBottomNavigationBar() {
+  Widget? buildBottomNavigationBar() {
     return null;
   }
 
-  Widget floatingActionButton() {
+  Widget? floatingActionButton() {
     return null;
   }
 
@@ -193,23 +192,23 @@ abstract class BaseStatefulScreen<
     return FloatingActionButtonLocation.endFloat;
   }
 
-  FloatingActionButtonAnimator floatingActionButtonAnimator() {
+  FloatingActionButtonAnimator? floatingActionButtonAnimator() {
     return null;
   }
 
-  List<Widget> persistentFooterButtons() {
+  List<Widget>? persistentFooterButtons() {
     return null;
   }
 
-  Widget drawer() {
+  Widget? drawer() {
     return null;
   }
 
-  Widget endDrawer() {
+  Widget? endDrawer() {
     return null;
   }
 
-  Widget bottomSheet() {
+  Widget? bottomSheet() {
     return null;
   }
 

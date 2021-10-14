@@ -23,9 +23,9 @@ class RESTService {
   static const String EXTRA_HTTP_VERB = "EXTRA_HTTP_VERB";
   static const String REST_API_CALL_IDENTIFIER = "REST_API_CALL_IDENTIFIER";
   static const String EXTRA_PARAMS = "EXTRA_PARAMS";
-  DioCacheManager _dioCacheManager;
+  DioCacheManager? _dioCacheManager;
 
-  Future<Response> onHandleIntent(Map<String, dynamic> params) async {
+  Future<Response>? onHandleIntent(Map<String, dynamic> params) async {
     dynamic action = params.putIfAbsent(data, () {});
 
     int verb = params.putIfAbsent(EXTRA_HTTP_VERB, () {
@@ -52,21 +52,21 @@ class RESTService {
       Dio request = Dio();
       _dioCacheManager ??= DioCacheManager(CacheConfig(baseUrl: apiUrl));
       request.interceptors
-        ..add(_dioCacheManager.interceptor)
-        ..add(InterceptorsWrapper(onError: (DioError e) async {
+        ..add(_dioCacheManager?.interceptor)
+        ..add(InterceptorsWrapper(onError: (DioError e,ErrorInterceptorHandler errorInterceptorHandler) async {
           if (e.response != null) {
-            AppLogger.log(e.response.data);
-            AppLogger.log(e.response.headers);
-            AppLogger.log(e.response.request);
+            AppLogger.log(e.response!.data);
+            AppLogger.log(e.response!.headers);
+            AppLogger.log(e.response!.requestOptions);
 
-            return parseErrorResponse(e, apiCallIdentifier);
+            return errorInterceptorHandler.resolve(await parseErrorResponse(e, apiCallIdentifier));
           } else {
             // Something happened in setting up or sending the request that triggered an Error
-            AppLogger.log(e.request);
+            AppLogger.log(e.requestOptions);
             AppLogger.log(e.message);
-            return parseErrorResponse(e, apiCallIdentifier);
+            return errorInterceptorHandler.resolve(await parseErrorResponse(e, apiCallIdentifier));
           }
-        }, onResponse: (response) {
+        }, onResponse: (response,ResponseInterceptorHandler responseInterceptorHandler) {
           response.headers
               .add("apicallidentifier", apiCallIdentifier.toString());
           response.extra.update("apicallidentifier", (value) => value,
@@ -78,7 +78,7 @@ class RESTService {
       request.options.extra.update("apicallidentifier", (value) => value,
           ifAbsent: () => apiCallIdentifier);
       if (getHeaders() != null) {
-        getHeaders().forEach((key, value) {
+        getHeaders()?.forEach((key, value) {
           request.options.headers[key] = value;
         });
       }
@@ -89,7 +89,7 @@ class RESTService {
         } else {
           request.options.extra.addAll(
               buildCacheOptions(Duration(days: 7), forceRefresh: forceRefresh)
-                  .extra);
+                  .extra!);
           request.options.extra
               .update("cached", (value) => value, ifAbsent: () => true);
         }
@@ -176,13 +176,15 @@ class RESTService {
 
         default:
           throw DioError(
-            response: Response(headers: Headers()),
+            response: Response(
+                headers: Headers(), requestOptions: RequestOptions(path: '')),
+            requestOptions: RequestOptions(path: ''),
           );
       }
     } catch (error, stacktrace) {
       AppLogger.log("Exception occured: $error stackTrace: $stacktrace");
       // AppLogger.log(_handleError(error));
-      return parseErrorResponse(error, apiCallIdentifier);
+      return parseErrorResponse(error as Exception, apiCallIdentifier);
       // The request was made and the server responded with a status code
       // that falls out of the range of 2xx and is also not 304.
       /* AppLogger.log("Exception e::"+e.toString());
@@ -208,38 +210,38 @@ class RESTService {
   }
 
   Future<bool> clearNetworkCache() {
-    if (_dioCacheManager != null) return _dioCacheManager.clearAll();
+    if (_dioCacheManager != null) return _dioCacheManager?.clearAll()??Future.value(false);
     return Future.value(false);
   }
 
   BaseError _handleError(Exception error) {
-    BaseError amerError = BaseError();
+    BaseError amerError = BaseError(message: '');
 
     if (error is DioError) {
       switch (error.type) {
-        case DioErrorType.CANCEL:
+        case DioErrorType.cancel:
           amerError.type = BaseErrorType.DEFAULT;
           amerError.message = "Request to API server was cancelled";
           break;
-        case DioErrorType.CONNECT_TIMEOUT:
+        case DioErrorType.connectTimeout:
           amerError.type = BaseErrorType.SERVER_TIMEOUT;
           amerError.message = "Connection timeout with API server";
           break;
-        case DioErrorType.DEFAULT:
+        case DioErrorType.other:
           amerError.type = BaseErrorType.DEFAULT;
           amerError.message =
               "Connection to API server failed due to internet connection";
           break;
-        case DioErrorType.RECEIVE_TIMEOUT:
+        case DioErrorType.receiveTimeout:
           amerError.type = BaseErrorType.SERVER_TIMEOUT;
           amerError.message = "Receive timeout in connection with API server";
           break;
-        case DioErrorType.RESPONSE:
+        case DioErrorType.response:
           amerError.type = BaseErrorType.INVALID_RESPONSE;
           amerError.message =
-              "Received invalid status code: ${error.response.statusCode}";
+              "Received invalid status code: ${error.response?.statusCode}";
           break;
-        case DioErrorType.SEND_TIMEOUT:
+        case DioErrorType.sendTimeout:
           amerError.type = BaseErrorType.SERVER_TIMEOUT;
           amerError.message = "Receive timeout exception";
           break;
@@ -263,27 +265,29 @@ class RESTService {
   Future<Response> parseErrorResponse(
       Exception exception, apiCallIdentifier) async {
     return await Future<Response>(() {
-      Response response;
+      Response? response;
 
       if (exception is DioError) {
         if (exception.response != null) {
           response = exception.response;
         } else {
-          response = Response(headers: Headers());
+          response = Response(
+              headers: Headers(), requestOptions: RequestOptions(path: ''));
         }
       } else {
-        response = Response(headers: Headers());
+        response = Response(
+            headers: Headers(), requestOptions: RequestOptions(path: ''));
       }
       //response.data = null;
-      response.headers.set("apicallidentifier", apiCallIdentifier.toString());
+      response?.headers.set("apicallidentifier", apiCallIdentifier.toString());
 
       //response.statusMessage = _handleError(exception);
-      response.extra = Map();
-      response.extra.putIfAbsent("exception", () => _handleError(exception));
-      response.extra.update("apicallidentifier", (value) => value,
+      response?.extra = Map();
+      response?.extra.putIfAbsent("exception", () => _handleError(exception));
+      response?.extra.update("apicallidentifier", (value) => value,
           ifAbsent: () => apiCallIdentifier);
-      response.extra.update("cached", (value) => false, ifAbsent: () => false);
-      return response;
+      response?.extra.update("cached", (value) => false, ifAbsent: () => false);
+      return Future.value(response);
     });
   }
 
@@ -300,7 +304,7 @@ class RESTService {
     return parameters;
   }
 
-  Map<String, dynamic> getHeaders() {
+  Map<String, dynamic>? getHeaders() {
     return null;
   }
 }

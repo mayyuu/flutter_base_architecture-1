@@ -6,9 +6,9 @@ class OrientationLayoutBuilder extends StatelessWidget {
   final WidgetBuilder portrait;
 
   const OrientationLayoutBuilder({
-    Key key,
-    this.landscape,
-    this.portrait,
+    Key? key,
+    required this.landscape,
+    required this.portrait,
   }) : super(key: key);
 
   @override

@@ -13,7 +13,7 @@ class ResponsiveBuilder extends StatelessWidget {
 
   final ScreenBreakpoints breakpoints;
 
-  const ResponsiveBuilder({Key key, this.builder, this.breakpoints})
+  const ResponsiveBuilder({Key? key,required this.builder,required this.breakpoints})
       : super(key: key);
 
   @override

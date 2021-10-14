@@ -19,7 +19,7 @@ abstract class BaseStatelessScreen extends BaseStatelessWidget {
   Widget getLayout(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: buildAppbar(context),
+        appBar: buildAppbar(context) as PreferredSizeWidget,
         body: buildBody(context),
       ),
     );

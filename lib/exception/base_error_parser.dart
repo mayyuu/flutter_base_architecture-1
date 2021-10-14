@@ -6,7 +6,7 @@ abstract class BaseErrorParser {
   BaseErrorParser();
 
   @mustCallSuper
-  String parseError(BuildContext context, BaseError error) {
+  String? parseError(BuildContext context, BaseError error) {
     switch (error.type) {
       case BaseErrorType.DEFAULT:
         return "Something went wrong. Please try again.";

@@ -8,7 +8,7 @@ class ErrorHandler<T extends BaseErrorParser> {
 
   ErrorHandler(this.parser);
 
-  String parseErrorType(BuildContext context, BaseError error) {
+  String? parseErrorType(BuildContext context, BaseError error) {
     return parser.parseError(context, error);
   }
 }

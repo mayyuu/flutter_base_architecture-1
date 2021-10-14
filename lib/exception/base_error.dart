@@ -6,7 +6,7 @@ import 'package:flutter_base_architecture/presentation/enum.dart';
 /// actions. The message should be descriptive.
 class BaseError implements Exception {
   BaseError({
-    this.message,
+    this.message='',
     this.type = BaseErrorType.DEFAULT,
     this.error,
   });

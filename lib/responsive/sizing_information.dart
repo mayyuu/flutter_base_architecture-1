@@ -15,9 +15,9 @@ class SizingInformation {
   bool get isWatch => deviceScreenType == DeviceScreenType.Watch;
 
   SizingInformation({
-    this.deviceScreenType,
-    this.screenSize,
-    this.localWidgetSize,
+    required this.deviceScreenType,
+    required this.screenSize,
+    required this.localWidgetSize,
   });
 
   @override

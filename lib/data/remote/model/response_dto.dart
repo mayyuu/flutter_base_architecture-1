@@ -1,10 +1,10 @@
 class ResponseDto {
-  String _status;
+  String _status="";
   String _message = "";
-  int _code;
-  List<dynamic> _data;
+  int _code=-1;
+  List<dynamic> _data=[];
 
-  List<dynamic> _errors;
+  List<dynamic> _errors=[];
 
   List<dynamic> get errors => _errors;
 
