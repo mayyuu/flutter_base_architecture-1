@@ -11,9 +11,9 @@ class ResponsiveBuilder extends StatelessWidget {
     SizingInformation sizingInformation,
   ) builder;
 
-  final ScreenBreakpoints breakpoints;
+  final ScreenBreakpoints? breakpoints;
 
-  const ResponsiveBuilder({Key? key,required this.builder,required this.breakpoints})
+  const ResponsiveBuilder({Key? key,required this.builder, this.breakpoints})
       : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class ResponsiveBuilder extends StatelessWidget {
   }
 }
 
-DeviceScreenType _getDeviceType(MediaQueryData mediaQuery, ScreenBreakpoints breakpoint) {
+DeviceScreenType _getDeviceType(MediaQueryData mediaQuery, ScreenBreakpoints? breakpoint) {
   double deviceWidth = mediaQuery.size.shortestSide;
 
   if (kIsWeb) {
@@ -40,15 +40,15 @@ DeviceScreenType _getDeviceType(MediaQueryData mediaQuery, ScreenBreakpoints bre
 
   // Replaces the defaults with the user defined definitions
   if(breakpoint != null) {
-    if(deviceWidth > breakpoint.desktop) {
+    if(deviceWidth > (breakpoint.desktop ?? 0.0)) {
       return DeviceScreenType.Desktop;
     }
 
-    if(deviceWidth > breakpoint.tablet) {
+    if(deviceWidth > (breakpoint.tablet ?? 0.0)) {
       return DeviceScreenType.Tablet;
     }
 
-    if(deviceWidth < breakpoint.watch) {
+    if(deviceWidth < (breakpoint.watch ?? 0.0)) {
       return DeviceScreenType.Watch;
     }
   }

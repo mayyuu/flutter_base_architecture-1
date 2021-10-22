@@ -1,15 +1,14 @@
-import 'package:flutter/widgets.dart';
 
 /// Manually define screen resolution breakpoints
 ///
 /// Overrides the defaults
 class ScreenBreakpoints {
-  final double watch;
-  final double tablet;
-  final double desktop;
+  final double? watch;
+  final double? tablet;
+  final double? desktop;
 
   ScreenBreakpoints(
-      {required this.desktop, required this.tablet,required this.watch});
+      { this.desktop,  this.tablet, this.watch});
 
   @override
   String toString() {

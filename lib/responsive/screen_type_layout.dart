@@ -14,7 +14,7 @@ import 'responsive_builder.dart';
 /// [desktop] will be built if width is greater than 950
 class ScreenTypeLayout extends StatelessWidget {
 
-  final ScreenBreakpoints breakpoints;
+  final ScreenBreakpoints? breakpoints;
 
   final WidgetBuilder? watch;
   final WidgetBuilder? mobile;
@@ -22,7 +22,7 @@ class ScreenTypeLayout extends StatelessWidget {
   final WidgetBuilder? desktop;
 
   ScreenTypeLayout(
-      {Key? key,required this.breakpoints,required Widget watch,required Widget mobile,required Widget tablet,required Widget desktop}) :
+      {Key? key, this.breakpoints, Widget? watch,  Widget? mobile,  Widget? tablet, Widget? desktop}) :
         this.watch = _builderOrNull(watch),
         this.mobile = _builderOrNull(mobile),
         this.tablet = _builderOrNull(tablet),
@@ -30,10 +30,10 @@ class ScreenTypeLayout extends StatelessWidget {
         super(key: key);
 
   const ScreenTypeLayout.builder(
-      {Key? key,required this.breakpoints,required this.watch,required this.mobile,required this.tablet,required this.desktop})
+      {Key? key, this.breakpoints, this.watch, this.mobile, this.tablet, this.desktop})
       : super(key: key);
 
-  static WidgetBuilder? _builderOrNull(Widget widget) {
+  static WidgetBuilder? _builderOrNull(Widget? widget) {
     return widget == null ? null : ((_) => widget);
   }
 
