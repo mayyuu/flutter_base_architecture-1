@@ -16,25 +16,25 @@ class SessionManager {
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// bool.
-  bool getBool(String key) => _preferenceCache('Bool', key);
+  bool? getBool(String key) => _preferenceCache('Bool', key);
 
   /// Reads a value from persistent storage, throwing an exception if it's not
   /// an int.
-  int getInt(String key) => _preferenceCache('Int', key);
+  int? getInt(String key) => _preferenceCache('Int', key);
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// double.
-  double getDouble(String key) => _preferenceCache('Double', key);
+  double? getDouble(String key) => _preferenceCache('Double', key);
 
   /// Reads a value from persistent storage, throwing an exception if it's not a
   /// String.
-  String getString(String key) => _preferenceCache('String', key);
+  String? getString(String key) => _preferenceCache('String', key);
 
   /// Returns true if persistent storage the contains the given [key].
   //bool containsKey(String key) => _preferenceCache.containsKey(key);
   /// Reads a set of string values from persistent storage, throwing an
   /// exception if it's not a string set.
-  List<String> getStringList(String key) => _preferenceCache('StringList', key);
+  List<String>? getStringList(String key) => _preferenceCache('StringList', key);
 
   _preferenceCache(String valueType, String key) {
     switch (valueType) {
