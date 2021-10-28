@@ -73,6 +73,7 @@ class RESTService {
               ifAbsent: () => apiCallIdentifier);
           response.extra
               .update("cached", (value) => false, ifAbsent: () => false);
+          return responseInterceptorHandler.next(response);
         }));
       request.options.headers['apicallidentifier'] = apiCallIdentifier;
       request.options.extra.update("apicallidentifier", (value) => value,
