@@ -146,7 +146,7 @@ abstract class BaseStatefulScreen<
       ),
       child: BaseWidget<VM>(
           viewModel: getViewModel(),
-          builder: (BuildContext context, VM model, Widget child) {
+          builder: (BuildContext context, VM model, Widget? child) {
             return Scaffold(
                 backgroundColor: scaffoldColor(),
                 key: scaffoldKey,

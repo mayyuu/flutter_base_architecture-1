@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
-  final Widget Function(BuildContext context, T model, Widget child)? builder;
+  final Widget Function(BuildContext context, T model, Widget? child) builder;
   final T viewModel;
   final Widget? child;
   final Function(T)? onModelReady;
@@ -11,13 +11,13 @@ class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
 
   BaseWidget(
       {Key? key,
-      this.builder,
-      required this.viewModel,
-      this.child, this.onModelReady,
-      this.duration: const Duration(
-        milliseconds: 600,
-      ),
-      this.animate: false})
+        required this.builder,
+        required this.viewModel,
+        this.child, this.onModelReady,
+        this.duration: const Duration(
+          milliseconds: 600,
+        ),
+        this.animate: false})
       : super(key: key);
 
   @override
@@ -68,9 +68,7 @@ class _BaseWidget<T extends ChangeNotifier> extends State<BaseWidget<T>>
                 );
               },
               animation: _controller!,
-              child: widget.builder == null
-                  ? Container()
-                  : widget.builder!(context, model, child!));
+              child: widget.builder(context, model, child));
         },
         child: widget.child,
       ),
