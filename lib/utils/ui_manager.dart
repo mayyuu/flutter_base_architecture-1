@@ -26,9 +26,9 @@ abstract class UIManager {
     return size * widthScale;
   }
 
-  double get heightScale => _currentModel?.height??0 / referenceModel().height;
+  double get heightScale => (_currentModel?.height??0) / referenceModel().height;
 
-  double get widthScale => _currentModel?.width??0 / referenceModel().width;
+  double get widthScale => (_currentModel?.width??0) / referenceModel().width;
 
   double get scale => min(widthScale, heightScale);
 
