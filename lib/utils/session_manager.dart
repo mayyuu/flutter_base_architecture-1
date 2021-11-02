@@ -94,7 +94,7 @@ class SessionManager {
   Future<bool> _setValue(String valueType, String key, Object? value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (value == null && key != 'remove') {
+    if (value == null && valueType != 'remove') {
       return false;
     }
     switch (valueType) {
