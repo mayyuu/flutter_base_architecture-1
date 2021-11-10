@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
   final Widget Function(BuildContext context, T model, Widget? child) builder;
-  final T viewModel;
+  final ProviderBase<Object?, T> providerBase;
   final Widget? child;
   final Function(T)? onModelReady;
   Duration duration;
@@ -12,7 +12,7 @@ class BaseWidget<T extends ChangeNotifier> extends StatefulWidget {
   BaseWidget(
       {Key? key,
         required this.builder,
-        required this.viewModel,
+        required this.providerBase,
         this.child, this.onModelReady,
         this.duration: const Duration(
           milliseconds: 600,
@@ -37,7 +37,7 @@ class _BaseWidget<T extends ChangeNotifier> extends State<BaseWidget<T>>
         vsync: this,
         duration: widget.animate ? widget.duration : Duration(milliseconds: 0));
     _controller?.forward(from: 0.0);
-    _model = widget.viewModel;
+    _model = context.read(widget.providerBase);
     duration = widget.duration;
 
     if (_model != null) {
@@ -55,23 +55,21 @@ class _BaseWidget<T extends ChangeNotifier> extends State<BaseWidget<T>>
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<T>.value(
-      value: _model!,
-      child: Consumer<T>(
-        builder: (context, model, child) {
-          _controller?.forward(from: 0.0);
-          return AnimatedBuilder(
-              builder: (context, child) {
-                return Opacity(
-                  opacity: _controller?.value ?? 0,
-                  child: child,
-                );
-              },
-              animation: _controller!,
-              child: widget.builder(context, model, child));
-        },
-        child: widget.child,
-      ),
+    return Consumer(
+      builder: (context, watch, child) {
+        _controller?.forward(from: 0.0);
+        _model = watch(widget.providerBase);
+        return AnimatedBuilder(
+            builder: (context, child) {
+              return Opacity(
+                opacity: _controller?.value ?? 0,
+                child: child,
+              );
+            },
+            animation: _controller!,
+            child: widget.builder(context, _model!, child));
+      },
+      child: widget.child,
     );
   }
 }

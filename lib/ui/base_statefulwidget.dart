@@ -8,8 +8,8 @@ import 'package:flutter_base_architecture/exception/base_error_handler.dart';
 import 'package:flutter_base_architecture/exception/base_error_parser.dart';
 import 'package:flutter_base_architecture/extensions/widget_extensions.dart';
 import 'package:flutter_base_architecture/viewmodels/base_view_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 
 import 'base_error_widget.dart';
 import 'base_widget.dart';
@@ -124,8 +124,8 @@ abstract class BaseStatefulScreen<
   @override
   Widget build(BuildContext context) {
     addDefaultErrorWidget(context);
-    _userStore = Provider.of(context);
-    _errorHandler = Provider.of(context, listen: false);
+    _userStore = context.read(userStoreProviderBase());
+    _errorHandler = context.read(errorHandlerProviderBase());
     return getLayout();
   }
 
@@ -139,13 +139,20 @@ abstract class BaseStatefulScreen<
     return viewModel!;
   }
 
+  /// Declare and initialization of viewModel for the page
+  ProviderBase<Object?, VM> provideBase();
+
+  ProviderBase<Object?, UserStore<User>?> userStoreProviderBase();
+
+  ProviderBase<Object?, ErrorHandler<ErrorParser>?> errorHandlerProviderBase();
+
   Widget getLayout() {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: statusBarColor(),
       ),
       child: BaseWidget<VM>(
-          viewModel: getViewModel(),
+          providerBase: provideBase(),
           builder: (BuildContext context, VM model, Widget? child) {
             return Scaffold(
                 backgroundColor: scaffoldColor(),
