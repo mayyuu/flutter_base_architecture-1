@@ -13,9 +13,9 @@ abstract class BaseModelWidget<T extends ChangeNotifier, ErrorParser extends Bas
 
   final ProviderBase<Object?, T> providerBase;
 
-  final ProviderBase<Object?, ErrorHandler<ErrorParser>?> errorHandlerProviderBase;
+  final ProviderBase<Object?, ErrorHandler<ErrorParser>?>? errorHandlerProviderBase;
 
-  BaseModelWidget(this.providerBase, this.errorHandlerProviderBase);
+  BaseModelWidget(this.providerBase, {this.errorHandlerProviderBase});
 
 
   @protected
@@ -23,7 +23,7 @@ abstract class BaseModelWidget<T extends ChangeNotifier, ErrorParser extends Bas
 
   @override
   DataProviderElement<T, ErrorParser> createElement() =>
-      DataProviderElement<T, ErrorParser>(this,this.providerBase,this.errorHandlerProviderBase);
+      DataProviderElement<T, ErrorParser>(this,this.providerBase,errorHandlerProviderBase: this.errorHandlerProviderBase);
 
   void showToastMessage(String message,
       {required Toast toastLength,
@@ -49,11 +49,11 @@ abstract class BaseModelWidget<T extends ChangeNotifier, ErrorParser extends Bas
 
 class DataProviderElement<T extends ChangeNotifier, ErrorParser extends BaseErrorParser>
     extends ComponentElement {
-  DataProviderElement(BaseModelWidget widget,this.providerBase,this.errorHandlerProviderBase) : super(widget);
+  DataProviderElement(BaseModelWidget widget,this.providerBase,{this.errorHandlerProviderBase}) : super(widget);
 
   final ProviderBase<Object?, T> providerBase;
 
-  final ProviderBase<Object?, ErrorHandler<ErrorParser>?> errorHandlerProviderBase;
+  final ProviderBase<Object?, ErrorHandler<ErrorParser>?>? errorHandlerProviderBase;
 
 
   @override
@@ -61,7 +61,9 @@ class DataProviderElement<T extends ChangeNotifier, ErrorParser extends BaseErro
 
   @override
   Widget build() {
-    widget._errorHandler = this.read(errorHandlerProviderBase);
+    if(errorHandlerProviderBase != null){
+      widget._errorHandler = this.read(errorHandlerProviderBase!);
+    }
     return BaseWidget<T>(
       providerBase: providerBase,
       builder: (context, model, child) {
