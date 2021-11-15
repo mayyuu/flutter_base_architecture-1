@@ -112,14 +112,14 @@ abstract class BaseStatefulScreen<
     super.initState();
   }
 
-  @override
+/*  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     //viewModel = Provider.of(context);
     if (viewModel == null || getViewModel() != viewModel) {
       viewModel = initViewModel();
     }
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -238,8 +238,6 @@ abstract class BaseStatefulScreen<
   double drawerEdgeDragWidth() {
     return 20.0;
   }
-
-  VM initViewModel();
 
   Color scaffoldColor();
 
