@@ -112,14 +112,14 @@ abstract class BaseStatefulScreen<
     super.initState();
   }
 
-/*  @override
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    //viewModel = Provider.of(context);
+    viewModel = context.read(provideBase());
     if (viewModel == null || getViewModel() != viewModel) {
-      viewModel = initViewModel();
+      viewModel = context.read(provideBase());
     }
-  }*/
+  }
 
   @override
   Widget build(BuildContext context) {
