@@ -249,7 +249,8 @@ abstract class BaseStatefulScreen<
 
   @override
   void dispose() {
-    getViewModel().dispose();
+    /// Commented because riverpod is handling it internally
+    /*getViewModel().dispose();*/
     super.dispose();
   }
 }
